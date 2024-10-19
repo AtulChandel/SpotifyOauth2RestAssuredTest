@@ -1,0 +1,49 @@
+Framework Goals:
+
+Scalable And Extensible
+Reusable Rest Assured Specifications
+Reusable Rest Assured API Requests
+Separation Of API Layer From Test Layer
+POJOs for Serialization And Deserialization
+Singleton Design Pattern
+Lombok For Reducing Boilerplate Code
+Builder Pattern For Setter Methods In POJOs
+Robust reporting And Logging Using Allure
+Automate Positive And Negative Scenarios
+Support Parallel Execution
+Data Driven Using TestNG Data Provider
+Automated Access Token Renewal
+Maven Command Line Execution
+Integration With Git
+Integration With Jenkins
+
+Tools And Technologies:
+
+Rest Assured
+TestNG
+Java
+Allure Reports
+Hamcrest
+Jackson API
+Lombok
+
+
+What are we automating:
+
+Spotify Playlists API using the OAuth 2.0 flow
+
+1. Create a Playlist
+2. Get a Playlist
+3. Change a Playlist's Details
+
+Test Cases:
+
+    shouldBeAbleToCreateAPlaylist
+
+    shouldNotBeAbleToCreateAPlaylistWithoutName
+
+    shouldNotBeAbleToCreateAPlaylistIfTokenIsExpired
+
+    shouldBeAbleToFetchAGivenPlaylist
+
+    shouldBeAbleToUpdateAGivenPlaylist
