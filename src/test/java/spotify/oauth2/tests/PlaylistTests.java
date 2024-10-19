@@ -58,7 +58,7 @@ public class PlaylistTests {
     }
 
     @Test
-    public void ShouldNotBeAbleToCreatePlaylist() {
+    public void ShouldNotBeAbleToCreatePlaylistWithoutName() {
         String payload = "{\n" +
                 "    \"description\": \"New playlist description\",\n" +
                 "    \"public\": false\n" +

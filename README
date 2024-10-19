@@ -38,12 +38,12 @@ Spotify Playlists API using the OAuth 2.0 flow
 
 Test Cases:
 
-    shouldBeAbleToCreateAPlaylist
+    ShouldBeAbleToCreatePlaylist
 
-    shouldNotBeAbleToCreateAPlaylistWithoutName
+    ShouldBeAbleToGetPlaylist
 
-    shouldNotBeAbleToCreateAPlaylistIfTokenIsExpired
+    ShouldBeAbleToUpdatePlaylist
 
-    shouldBeAbleToFetchAGivenPlaylist
+    ShouldNotBeAbleToCreatePlaylistWithoutName
 
-    shouldBeAbleToUpdateAGivenPlaylist
+    ShouldNotBeAbleToCreatePlaylistWithExpiredToken
