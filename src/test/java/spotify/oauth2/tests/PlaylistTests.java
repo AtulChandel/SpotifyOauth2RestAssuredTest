@@ -18,7 +18,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 public class PlaylistTests {
     static RequestSpecification requestSpecification;
     static ResponseSpecification responseSpecification;
-    static String access_token = "BQCFo1-OtdGKYavj8MMTD9wlkH6VyeRX0zmnUmcU97A7kPM3LAiO6GKtoqVsQPd3D3mDY4b9c4VO9JXKz5jtc2kdV17iwI3j-vO8coIJ2khelwKix6VmwrRgImL2iiQ7Xg_arbixe-hfanDTwYSfTxa8H6vSvzprvvZ_Zd4cIkxfJ6Dy2nanivLdZqvMSCP2Ek6BO2ovGWIoWa_foEN2QWaFDwQgs6ogYd_prhc-4XVZQfIpUYA3gP5UEbc5uPXZKmBluhC9Ckj1zkjFAfpw9A5z";
+    static String access_token = "*******";
 
     @BeforeClass
     public static void beforeClass() {
