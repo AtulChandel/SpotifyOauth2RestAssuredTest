@@ -1,29 +1,24 @@
 package spotify.oauth2.tests;
 
-import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
-import io.restassured.parsing.Parser;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import spotify.oauth2.pojo.PlayList;
-import spotify.oauth2.pojo.Error;
 
 
 import static io.restassured.RestAssured.given;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 public class PlaylistTests {
     static RequestSpecification requestSpecification;
     static ResponseSpecification responseSpecification;
-    static String access_token = "BQC5F6zzu8LobluYpk_Px0NXzrS13T4OavYMrmeuTkriUd2QiUs_5Mivgic9Evl1t_d3RurBH1c_WnFt09vbya4nXo3m6ZXrfaQvxX4KkKgoGAT9FFByGfGNI_N8vWaOVAqPdqAouyC9Nvdr8kiPQ38bqkYdeaAMXsYyiaDKC42w_uHpRw9mWJB0po_8olTfqs2lKhqpnGckLP-YjWel-6pEy3Z22qvn8YCXMwawgnibtKxZQqcjttFAKcWnlZBSlUnnJ7FSeOiz6Y_U7mV5k-Ue";
+    static String access_token = "BQCFo1-OtdGKYavj8MMTD9wlkH6VyeRX0zmnUmcU97A7kPM3LAiO6GKtoqVsQPd3D3mDY4b9c4VO9JXKz5jtc2kdV17iwI3j-vO8coIJ2khelwKix6VmwrRgImL2iiQ7Xg_arbixe-hfanDTwYSfTxa8H6vSvzprvvZ_Zd4cIkxfJ6Dy2nanivLdZqvMSCP2Ek6BO2ovGWIoWa_foEN2QWaFDwQgs6ogYd_prhc-4XVZQfIpUYA3gP5UEbc5uPXZKmBluhC9Ckj1zkjFAfpw9A5z";
 
     @BeforeClass
     public static void beforeClass() {
@@ -36,70 +31,50 @@ public class PlaylistTests {
 
     @Test
     public void ShouldBeAbleToCreatePlaylist() {
-        PlayList requestPlaylist = new PlayList();
-        requestPlaylist.setName("New playlist");
-        requestPlaylist.setDescription("New playlist description");
-        requestPlaylist.setPublic(false);
+        String payload = "{\n" +
+                "    \"name\": \"New Playlist\",\n" +
+                "    \"description\": \"New playlist description\",\n" +
+                "    \"public\": false\n" +
+                "}";
 
-        PlayList responsePlaylist = given(requestSpecification).body(requestPlaylist).when().post("/users/315jpcbxcid2bnvbjf5tx7tw46bu/playlists").then().spec(responseSpecification).assertThat().statusCode(201).extract().response().as(PlayList.class);
-
-        assertThat(responsePlaylist.getName(), equalTo(requestPlaylist.getName()));
-        assertThat(responsePlaylist.getDescription(), equalTo(requestPlaylist.getDescription()));
-        assertThat(responsePlaylist.getPublic(), equalTo(requestPlaylist.getPublic()));
-
+        given(requestSpecification).body(payload).when().post("/users/315jpcbxcid2bnvbjf5tx7tw46bu/playlists").then().spec(responseSpecification).assertThat().statusCode(201).body("name", equalTo("New Playlist"), "description", equalTo("New playlist description"), "public", equalTo(false));
     }
 
     @Test
     public void ShouldBeAbleToGetPlaylist() {
-        PlayList requestPlaylist = new PlayList();
-        requestPlaylist.setName("Updated playlist");
-        requestPlaylist.setDescription("Updated playlist description");
-        requestPlaylist.setPublic(true);
 
-        PlayList responsePlaylist = given(requestSpecification).when().get("/playlists/4GS0eXJNfL9wAS4HUpGuzn").then().spec(responseSpecification).assertThat().statusCode(200).extract().response().as(PlayList.class);
-
-        assertThat(responsePlaylist.getName(), equalTo(requestPlaylist.getName()));
-        assertThat(responsePlaylist.getDescription(), equalTo(requestPlaylist.getDescription()));
-        assertThat(responsePlaylist.getPublic(), equalTo(requestPlaylist.getPublic()));
-
-
+        given(requestSpecification).when().get("/playlists/4GS0eXJNfL9wAS4HUpGuzn").then().spec(responseSpecification).assertThat().statusCode(200).body("name", equalTo("Updated Playlist Name"), "description", equalTo("Updated playlist description"), "public", equalTo(true));
     }
 
     @Test
     public void ShouldBeAbleToUpdatePlaylist() {
-        PlayList requestPlaylist = new PlayList();
-        requestPlaylist.setName("Updated playlist");
-        requestPlaylist.setDescription("Updated playlist description");
-        requestPlaylist.setPublic(true);
+        String payload = "{\n" +
+                "    \"name\": \"Updated Playlist\",\n" +
+                "    \"description\": \"Updated playlist description\",\n" +
+                "    \"public\": false\n" +
+                "}";
 
-        given(requestSpecification).body(requestPlaylist).when().put("/playlists/4GS0eXJNfL9wAS4HUpGuzn").then().spec(responseSpecification).assertThat().statusCode(200);
-
+        given(requestSpecification).body(payload).when().put("/playlists/4GS0eXJNfL9wAS4HUpGuzn").then().spec(responseSpecification).assertThat().statusCode(200);
     }
 
     @Test
     public void ShouldNotBeAbleToCreatePlaylistWithoutName() {
-        PlayList requestPlaylist = new PlayList();
-        requestPlaylist.setName("");
-        requestPlaylist.setDescription("Updated playlist description");
-        requestPlaylist.setPublic(false);
+        String payload = "{\n" +
+                "    \"description\": \"New playlist description\",\n" +
+                "    \"public\": false\n" +
+                "}";
 
-
-        Error error = given(requestSpecification).body(requestPlaylist).when().post("/users/315jpcbxcid2bnvbjf5tx7tw46bu/playlists").then().spec(responseSpecification).assertThat().statusCode(400).extract().as(Error.class);
-        assertThat(error.getError().getStatus(), equalTo(400));
-        assertThat(error.getError().getMessage(), equalTo("Missing required field: name"));
+        given(requestSpecification).body(payload).when().post("/users/315jpcbxcid2bnvbjf5tx7tw46bu/playlists").then().spec(responseSpecification).assertThat().statusCode(400).body("error.status", equalTo(400), "error.message", equalTo("Missing required field: name"));
     }
 
     @Test
     public void ShouldNotBeAbleToCreatePlaylistWithExpiredToken() {
-        PlayList requestPlaylist = new PlayList();
-        requestPlaylist.setName("Updated playlist");
-        requestPlaylist.setDescription("Updated playlist description");
-        requestPlaylist.setPublic(false);
+        String payload = "{\n" +
+                "    \"name\": \"New Playlist\",\n" +
+                "    \"description\": \"New playlist description\",\n" +
+                "    \"public\": false\n" +
+                "}";
 
-        Error error = given().baseUri("https://api.spotify.com").basePath("v1").header("Authorization", "Bearer 12345").contentType(ContentType.JSON).log().all().body(requestPlaylist).when().post("/users/315jpcbxcid2bnvbjf5tx7tw46bu/playlists").then().spec(responseSpecification).assertThat().statusCode(401).extract().as(Error.class);
-
-        assertThat(error.getError().getStatus(), equalTo(401));
-        assertThat(error.getError().getMessage(), equalTo("Invalid access token"));
-
+        given().baseUri("https://api.spotify.com").basePath("v1").header("Authorization", "Bearer 12345").contentType(ContentType.JSON).log().all().body(payload).when().post("/users/315jpcbxcid2bnvbjf5tx7tw46bu/playlists").then().spec(responseSpecification).assertThat().statusCode(401).body("error.status", equalTo(401), "error.message", equalTo("Invalid access token"));
     }
 }
