@@ -7,14 +7,21 @@ import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 
+import static spotify.oauth2.api.Route.BASE_URL;
+
 public class SpecBuilder {
 
 
     public static RequestSpecification getRequestSpec(){
-        return new RequestSpecBuilder().setBaseUri("https://api.spotify.com").setBasePath("/v1").setContentType(ContentType.JSON).log(LogDetail.ALL).build();
+        return new RequestSpecBuilder().setBaseUri("https://api.spotify.com").setBasePath(BASE_URL).setContentType(ContentType.JSON).log(LogDetail.ALL).build();
     }
 
     public static ResponseSpecification getResponseSpec(){
         return new ResponseSpecBuilder().log(LogDetail.ALL).build();
     }
+
+    public static RequestSpecification getAccountRequestSpec(){
+        return new RequestSpecBuilder().setBaseUri("https://accounts.spotify.com").setContentType(ContentType.URLENC).log(LogDetail.ALL).build();
+    }
+
 }

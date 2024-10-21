@@ -2,6 +2,7 @@ package spotify.oauth2.api;
 
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import spotify.oauth2.utils.ConfigLoader;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -34,12 +35,12 @@ public class TokenManager {
 
     private static Response renewToken(){
         HashMap<String, String> formParams = new HashMap<>();
-        formParams.put("client_id", "a70fc2d0525349af95330282ad3bc033");
-        formParams.put("client_secret", "029bc216096341fd92ac31e5cbb3e220");
-        formParams.put("refresh_token", "AQCTvgnCaltGeVvXM_xvytDvMqHLbF0QQnrySN_Kph3U-sQrMDRS61KiDf62KcpQ6tirCUjMACy_F7SQ56K5qcX0uEkIxMesiZ5cdCC6tROnTcS1nodX4cNXY2lh1G89HjY");
-        formParams.put("grant_type", "refresh_token");
+        formParams.put("client_id", ConfigLoader.getInstance().getClientId());
+        formParams.put("client_secret", ConfigLoader.getInstance().getClientSecret());
+        formParams.put("refresh_token", ConfigLoader.getInstance().getRefreshToken());
+        formParams.put("grant_type", ConfigLoader.getInstance().getGrantType());
 
-        Response response = given().baseUri("https://accounts.spotify.com").contentType(ContentType.URLENC).formParams(formParams).log().all().when().post("/api/token").then().spec(getResponseSpec()).extract().response();
+        Response response = RestResource.postAccount(formParams);
 
         if(response.statusCode() !=200){
             throw new RuntimeException("Renew token failed!!");

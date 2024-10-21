@@ -8,6 +8,7 @@ import static spotify.oauth2.applicationApi.PlaylistApi.*;
 import spotify.oauth2.applicationApi.PlaylistApi;
 import spotify.oauth2.pojo.Error;
 import spotify.oauth2.pojo.PlayList;
+import spotify.oauth2.utils.DataLoader;
 
 public class PlaylistTests {
 
@@ -30,7 +31,7 @@ public class PlaylistTests {
     public void ShouldBeAbleToGetPlaylist() {
 
 
-        Response response = PlaylistApi.get("4GS0eXJNfL9wAS4HUpGuzn");
+        Response response = PlaylistApi.get(DataLoader.getInstance().getPlaylistId());
         assertThat(response.getStatusCode(), equalTo(200));
 
         PlayList responsePlaylist = response.as(PlayList.class);
@@ -42,7 +43,7 @@ public class PlaylistTests {
     @Test
     public void ShouldBeAbleToUpdatePlaylist() {
         PlayList requestPlaylist = new PlayList().setName("Updated Playlist").setDescription("Updated playlist description").setPublic(false);
-        Response response = update(requestPlaylist, "4GS0eXJNfL9wAS4HUpGuzn");
+        Response response = update(requestPlaylist, DataLoader.getInstance().getUpdatePlaylistId());
         assertThat(response.getStatusCode(), equalTo(200));
 
     }
