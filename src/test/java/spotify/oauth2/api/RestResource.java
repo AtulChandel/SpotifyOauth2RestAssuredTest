@@ -1,7 +1,5 @@
 package spotify.oauth2.api;
 
-import com.sun.xml.bind.v2.TODO;
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
 import java.util.HashMap;
