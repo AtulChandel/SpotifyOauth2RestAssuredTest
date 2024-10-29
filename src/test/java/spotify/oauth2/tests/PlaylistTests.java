@@ -5,8 +5,11 @@ import io.restassured.response.Response;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static spotify.oauth2.applicationApi.PlaylistApi.*;
+import static spotify.oauth2.utils.FakerUtils.generateDescription;
+import static spotify.oauth2.utils.FakerUtils.generateName;
 
 import org.testng.annotations.Test;
+import spotify.oauth2.api.StatusCode;
 import spotify.oauth2.applicationApi.PlaylistApi;
 import spotify.oauth2.pojo.Error;
 import spotify.oauth2.pojo.PlayList;
@@ -45,10 +48,10 @@ public class PlaylistTests {
     @Test(description = "Should be able to create a playlist")
     public void ShouldBeAbleToCreatePlaylist() {
 
-        PlayList requestPlaylist = playlistBuilder("New Playlist","New playlist description", false);
+        PlayList requestPlaylist = playlistBuilder(generateName(),generateDescription(), false);
 
         Response response = PlaylistApi.post(requestPlaylist);
-        assertStatusCode(response.getStatusCode(), 201);
+        assertStatusCode(response.getStatusCode(), StatusCode.CODE_201.getCode());
 
         PlayList responsePlaylist = response.as(PlayList.class);
         assertPlaylistEqual(requestPlaylist, responsePlaylist);
@@ -58,44 +61,43 @@ public class PlaylistTests {
     @Test(description = "Should be able to fetch playlist")
     public void ShouldBeAbleToGetPlaylist() {
 
-        PlayList requestPlaylist = playlistBuilder("Updated Playlist", "Updated playlist description", true);
+        PlayList requestPlaylist = playlistBuilder("Updated Playlist", "Updated Description", true);
         Response response = PlaylistApi.get(DataLoader.getInstance().getPlaylistId());
-        assertStatusCode(response.getStatusCode(), 200);
+        assertStatusCode(response.getStatusCode(), StatusCode.CODE_200.getCode());
 
         PlayList responsePlaylist = response.as(PlayList.class);
-        assertStatusCode(response.getStatusCode(), 200);
+        assertStatusCode(response.getStatusCode(), StatusCode.CODE_200.getCode());
         assertPlaylistEqual(responsePlaylist, requestPlaylist);
     }
 
     @Story("Create a playlist story")
     @Test(description = "Should be able to update a playlist")
     public void ShouldBeAbleToUpdatePlaylist() {
-        PlayList requestPlaylist = playlistBuilder("Updated Playlist","Updated playlist description",false);
+        PlayList requestPlaylist = playlistBuilder("Updated Playlist","Updated Description",false);
         Response response = update(requestPlaylist, DataLoader.getInstance().getUpdatePlaylistId());
-        assertStatusCode(response.getStatusCode(), 200);
+        assertStatusCode(response.getStatusCode(), StatusCode.CODE_200.getCode());
     }
 
     @Story("Create a playlist story")
     @Test(description = "Should not be able to create a playlist without a name")
     public void ShouldNotBeAbleToCreatePlaylistWithoutName() {
-        PlayList requestPlaylist = playlistBuilder("","Updated playlist description",false);
+        PlayList requestPlaylist = playlistBuilder("",generateDescription(),false);
         Response response = PlaylistApi.post(requestPlaylist);
-        assertStatusCode(response.getStatusCode(), 400);
+        assertStatusCode(response.getStatusCode(), StatusCode.CODE_400.getCode());
 
         Error error = response.as(Error.class);
-        assertError(error, 400,"Missing required field: name");
+        assertError(error, StatusCode.CODE_400.getCode(), StatusCode.CODE_400.getMsg());
 
     }
 
     @Test(description = "Should not be able to create a playlist with expired token")
     public void ShouldNotBeAbleToCreatePlaylistWithExpiredToken() {
 
-        PlayList requestPlaylist = playlistBuilder("New Playlist","New playlist description",false);
+        PlayList requestPlaylist = playlistBuilder(generateName(),generateDescription(),false);
         Response response = PlaylistApi.post("zxcvbnm1234",requestPlaylist);
-        assertStatusCode(response.getStatusCode(), 401);
+        assertStatusCode(response.getStatusCode(), StatusCode.CODE_401.getCode());
 
         Error error = response.as(Error.class);
-        assertError(error, 401, "Invalid access token");
-
+        assertError(error, StatusCode.CODE_401.getCode(), StatusCode.CODE_401.getMsg());
     }
 }
